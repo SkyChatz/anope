@@ -1,7 +1,7 @@
 /* BotServ core functions
  *
  * (C) 2003-2023 Anope Team
- * Contact us at team@anope.org
+ * Contact us at team@Anope.org
  *
  * Please read COPYING and README for further details.
  *
@@ -263,6 +263,26 @@ class CommandBSBot : public Command
 		delete bi;
 		return;
 	}
+
+    void DoClear(CommandSource &source, const std::vector<Anope::string> &params)
+	{
+        int bi_matches = 0;
+        for (botinfo_map::const_iterator it = BotListByNick->begin(), it_end = BotListByNick->end(); it != it_end; ++it)
+		{
+			BotInfo *bi = it->second;
+            ++it;
+            if (bi->conf)
+		    {
+			    continue;
+		    }
+			++bi_matches;
+            FOREACH_MOD(OnBotDelete, (bi));
+			delete bi;
+            return;
+		}
+		Log(LOG_ADMIN, source, this) << "All bot has been deleted";
+        source.Reply(_("All Bot has been deleted."));
+	}
  public:
 	CommandBSBot(Module *creator) : Command(creator, "botserv/bot", 1, 6)
 	{
@@ -270,9 +290,10 @@ class CommandBSBot : public Command
 		this->SetSyntax(_("\002ADD \037nick\037 \037user\037 \037host\037 \037real\037\002"));
 		this->SetSyntax(_("\002CHANGE \037oldnick\037 \037newnick\037 [\037user\037 [\037host\037 [\037real\037]]]\002"));
 		this->SetSyntax(_("\002DEL \037nick\037\002"));
+        this->SetSyntax(_("\002CLEAR \037ALL\037\002"));
 	}
 
-	void Execute(CommandSource &source, const std::vector<Anope::string> &params) anope_override
+	void Execute(CommandSource &source, const std::vector<Anope::string> &params) Anope_override
 	{
 		const Anope::string &cmd = params[0];
 
@@ -339,13 +360,30 @@ class CommandBSBot : public Command
 
 			return this->DoDel(source, params);
 		}
+        else if (cmd.equals_ci("Clear"))
+		{
+			// Delete all bot except bot in conf files
+			if (!source.HasCommand("botserv/bot/clear"))
+			{
+				source.Reply(ACCESS_DENIED);
+				return;
+			}
+
+			if (params.size() < 1)
+			{
+				this->OnSyntaxError(source, "CLEAR");
+				return;
+			}
+
+			return this->DoClear(source, params);
+		}
 		else
 			this->OnSyntaxError(source, "");
 
 		return;
 	}
 
-	bool OnHelp(CommandSource &source, const Anope::string &subcommand) anope_override
+	bool OnHelp(CommandSource &source, const Anope::string &subcommand) Anope_override
 	{
 		this->SendSyntax(source);
 		source.Reply(" ");
@@ -362,6 +400,8 @@ class CommandBSBot : public Command
 				"all the data associated with it).\n"
 				" \n"
 				"\002BOT DEL\002 removes the given bot from the bot list.\n"
+				" \n"
+                "\002BOT CLEAR ALL\002 removes all the bot from the bot list.\n"
 				" \n"
 				"\002Note\002: You cannot create a bot with a nick that is\n"
 				"currently registered. If an unregistered user is currently\n"
