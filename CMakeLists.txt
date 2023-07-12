@@ -87,9 +87,6 @@ if(CMAKE_COMPILER_IS_GNUCXX)
   if(GCC_VERSION LESS 4.2)
     message(FATAL_ERROR "Your compiler is too old to build Anope. Upgrade to GCC 4.2 or newer!")
   endif(GCC_VERSION LESS 4.2)
-  if(GCC_VERSION GREATER 6.0 OR GCC_VERSION EQUAL 6.0)
-    set(CXXFLAGS "${CXXFLAGS} -fno-delete-null-pointer-checks")
-  endif(GCC_VERSION GREATER 6.0 OR GCC_VERSION EQUAL 6.0)
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
 # If we are using a GNU compiler (have to use CXX because it seems to fail on C), we will be able to determine it's default paths for libraries and includes
@@ -231,6 +228,12 @@ endif(EXTRA_INCLUDE)
 if(EXTRA_LIBS)
   link_directories(${EXTRA_LIBS})
 endif(EXTRA_LIBS)
+
+# setup conan
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/conanbuildinfo.cmake")
+  include("${CMAKE_CURRENT_SOURCE_DIR}/conanbuildinfo.cmake")
+  conan_basic_setup()
+endif()
 
 # Find gettext
 find_package(Gettext)
@@ -505,10 +508,6 @@ if(WIN32)
   install(FILES ${Anope_SOURCE_DIR}/src/win32/anope.bat
     DESTINATION ${BIN_DIR}
   )
-
-  # Package any DLLs in src/win/
-  file(GLOB EXTRA_DLLS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "${Anope_SOURCE_DIR}/src/win32/*.dll")
-  install(FILES ${EXTRA_DLLS} DESTINATION ${BIN_DIR})
 endif(WIN32)
 
 install(CODE "file(REMOVE_RECURSE \"$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/${LIB_DIR}/modules\")")

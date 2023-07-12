@@ -1,5 +1,5 @@
 /*
- * (C) 2003-2022 Anope Team
+ * (C) 2003-2023 Anope Team
  * Contact us at team@anope.org
  *
  * Please read COPYING and README for further details.
@@ -166,6 +166,7 @@ namespace WebPanel
 #include "pages/nickserv/cert.h"
 #include "pages/nickserv/access.h"
 #include "pages/nickserv/alist.h"
+#include "pages/nickserv/confirm.h"
 
 #include "pages/chanserv/info.h"
 #include "pages/chanserv/set.h"

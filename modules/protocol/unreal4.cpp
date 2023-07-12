@@ -1,6 +1,6 @@
 /* Unreal IRCD 4 functions
  *
- * (C) 2003-2022 Anope Team
+ * (C) 2003-2023 Anope Team
  * Contact us at team@anope.org
  *
  * Please read COPYING and README for further details.
@@ -31,6 +31,7 @@ class UnrealIRCdProto : public IRCDProto
 		CanSetVIdent = true;
 		CanSNLine = true;
 		CanSQLine = true;
+		CanSQLineChannel = true;
 		CanSZLine = true;
 		CanSVSHold = true;
 		CanCertFP = true;
@@ -407,6 +408,11 @@ class UnrealIRCdProto : public IRCDProto
 		{
 			distmask = uid.substr(0, p);
 		}
+
+		if (!vident.empty())
+			UplinkSocket::Message(Me) << "CHGIDENT " << uid << " " << vident;
+		if (!vhost.empty())
+			UplinkSocket::Message(Me) << "CHGHOST " << uid << " " << vhost;
 		UplinkSocket::Message(Me) << "SVSLOGIN " << distmask << " " << uid << " " << acc;
 	}
 

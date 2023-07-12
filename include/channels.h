@@ -1,6 +1,6 @@
 /* Channel support
  *
- * (C) 2008-2022 Anope Team
+ * (C) 2008-2023 Anope Team
  * Contact us at team@anope.org
  *
  * Please read COPYING and README for further details.
@@ -288,6 +288,11 @@ class CoreExport Channel : public Base, public Extensible
 	 * @return true if they are allowed, false if they aren't and were kicked
 	 */
 	bool CheckKick(User *user);
+
+	/** Find which bot should send mode/topic/etc changes for this channel
+	 * @return The bot
+	 */
+	BotInfo *WhoSends() const;
 
 	/** Finds a channel
 	 * @param name The channel to find

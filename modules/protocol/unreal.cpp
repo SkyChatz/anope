@@ -1,6 +1,6 @@
 /* Unreal IRCD 3.2.x functions
  *
- * (C) 2003-2022 Anope Team
+ * (C) 2003-2023 Anope Team
  * Contact us at team@anope.org
  *
  * Please read COPYING and README for further details.
@@ -362,7 +362,7 @@ class UnrealIRCdProto : public IRCDProto
 		/* Unreal does not support updating a channels TS without actually joining a user,
 		 * so we will join and part us now
 		 */
-		BotInfo *bi = c->ci->WhoSends();
+		BotInfo *bi = c->WhoSends();
 		if (!bi)
 			;
 		else if (c->FindUser(bi) == NULL)

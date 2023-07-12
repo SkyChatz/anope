@@ -1,6 +1,6 @@
 /* MemoServ core functions
  *
- * (C) 2003-2022 Anope Team
+ * (C) 2003-2023 Anope Team
  * Contact us at team@anope.org
  *
  * Please read COPYING and README for further details.
@@ -205,6 +205,11 @@ class MemoServCore : public Module, public MemoServService
 	void OnNickUpdate(User *u) anope_override
 	{
 		this->Check(u);
+	}
+
+	void OnUserConnect(User *user, bool &exempt) anope_override
+	{
+		this->Check(user);
 	}
 
 	EventReturn OnPreHelp(CommandSource &source, const std::vector<Anope::string> &params) anope_override

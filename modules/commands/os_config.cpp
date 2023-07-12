@@ -1,6 +1,6 @@
 /* OperServ core functions
  *
- * (C) 2003-2022 Anope Team
+ * (C) 2003-2023 Anope Team
  * Contact us at team@anope.org
  *
  * Please read COPYING and README for further details.
@@ -32,7 +32,7 @@ class CommandOSConfig : public Command
 				return;
 			}
 
-			Configuration::Block *block = Config->GetBlock(params[1]);
+			Configuration::MutableBlock *block = Config->GetMutableBlock(params[1]);
 			if (!block)
 				block = Config->GetModule(params[1]);
 

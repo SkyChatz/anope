@@ -1,6 +1,6 @@
 /* InspIRCd 3.0 functions
  *
- * (C) 2003-2022 Anope Team
+ * (C) 2003-2023 Anope Team
  * Contact us at team@anope.org
  *
  * Please read COPYING and README for further details.
@@ -179,7 +179,7 @@ class InspIRCd3Proto : public IRCDProto
 	{
 		if (Servers::Capab.count("SVSTOPIC"))
 		{
-			UplinkSocket::Message(c->ci->WhoSends()) << "SVSTOPIC " << c->name << " " << c->topic_ts << " " << c->topic_setter << " :" << c->topic;
+			UplinkSocket::Message(c->WhoSends()) << "SVSTOPIC " << c->name << " " << c->topic_ts << " " << c->topic_setter << " :" << c->topic;
 		}
 		else
 		{
@@ -280,8 +280,16 @@ class InspIRCd3Proto : public IRCDProto
 	{
 		Anope::string modes = "+" + u->GetModes();
 		UplinkSocket::Message(Me) << "UID " << u->GetUID() << " " << u->timestamp << " " << u->nick << " " << u->host << " " << u->host << " " << u->GetIdent() << " 0.0.0.0 " << u->timestamp << " " << modes << " :" << u->realname;
+
 		if (modes.find('o') != Anope::string::npos)
+		{
+			// Mark as introduced so we can send an oper type.
+			BotInfo *bi = BotInfo::Find(u->nick, true);
+			if (bi)
+				bi->introduced = true;
+
 			UplinkSocket::Message(u) << "OPERTYPE :service";
+		}
 	}
 
 	void SendServer(const Server *server) anope_override
@@ -1157,7 +1165,7 @@ struct IRCDMessageCapab : Message::Capab
 					ModeManager::AddChannelMode(new InspIRCdExtban::ChannelMatcher("CHANNELBAN", "BAN", 'j'));
 				else if (module == "m_gecosban.so")
 					ModeManager::AddChannelMode(new InspIRCdExtban::RealnameMatcher("REALNAMEBAN", "BAN", 'r'));
-				else if (module == "m_nopartmessage.so")
+				else if (module == "m_nopartmsg.so")
 					ModeManager::AddChannelMode(new InspIRCdExtban::EntryMatcher("PARTMESSAGEBAN", "BAN", 'p'));
 				else if (module == "m_serverban.so")
 					ModeManager::AddChannelMode(new InspIRCdExtban::ServerMatcher("SERVERBAN", "BAN", 's'));

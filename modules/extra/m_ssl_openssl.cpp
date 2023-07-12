@@ -1,13 +1,13 @@
 /*
  *
- * (C) 2010-2022 Anope Team
+ * (C) 2010-2023 Anope Team
  * Contact us at team@anope.org
  *
  * Please read COPYING and README for further details.
  */
 
 /* RequiredLibraries: ssl,crypto */
-/* RequiredWindowsLibraries: ssleay32,libeay32 */
+/* RequiredWindowsLibraries: libssl,libcrypto */
 
 #include "module.h"
 #include "modules/ssl.h"

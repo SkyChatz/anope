@@ -1,6 +1,6 @@
 /* Logging routines.
  *
- * (C) 2003-2022 Anope Team
+ * (C) 2003-2023 Anope Team
  * Contact us at team@anope.org
  *
  * Please read COPYING and README for further details.
@@ -89,7 +89,7 @@ Log::Log(LogType t, CommandSource &src, Command *_c, ChannelInfo *_ci) : u(src.G
 	size_t sl = c->name.find('/');
 	this->bi = NULL;
 	if (sl != Anope::string::npos)
-		this->bi = BotInfo::Find(c->name.substr(0, sl), true);
+		this->bi = Config->GetClient(c->name.substr(0, sl));
 	this->category = c->name;
 }
 
@@ -369,7 +369,7 @@ void LogInfo::ProcessMessage(const Log *l)
 				if (!bi)
 					bi = this->bot;
 				if (!bi)
-					bi = c->ci->WhoSends();
+					bi = c->WhoSends();
 				if (bi)
 					IRCD->SendPrivmsg(bi, c->name, "%s", buffer.c_str());
 			}
