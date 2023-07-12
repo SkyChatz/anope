@@ -1,7 +1,7 @@
 /* BotServ core functions
  *
  * (C) 2003-2023 Anope Team
- * Contact us at team@Anope.org
+ * Contact us at team@anope.org
  *
  * Please read COPYING and README for further details.
  *
@@ -293,7 +293,7 @@ class CommandBSBot : public Command
         this->SetSyntax(_("\002CLEAR \037ALL\037\002"));
 	}
 
-	void Execute(CommandSource &source, const std::vector<Anope::string> &params) Anope_override
+	void Execute(CommandSource &source, const std::vector<Anope::string> &params) anope_override
 	{
 		const Anope::string &cmd = params[0];
 
@@ -383,7 +383,7 @@ class CommandBSBot : public Command
 		return;
 	}
 
-	bool OnHelp(CommandSource &source, const Anope::string &subcommand) Anope_override
+	bool OnHelp(CommandSource &source, const Anope::string &subcommand) anope_override
 	{
 		this->SendSyntax(source);
 		source.Reply(" ");
